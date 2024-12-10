@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
+from .models import Diagnostic
+from .forms import DiagnosticForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -21,7 +23,7 @@ def diagnostic_login_view(request):
         if user is not None:  # If credentials match
             if user.username == 'diagnostic_admin':  # Ensure it's the correct admin user
                 login(request, user)
-                return redirect('dashboard')
+                return redirect('diagnostic_dashboard')
             else:
                 return HttpResponse("Unauthorized user", status=403)
         else:  # Invalid credentials
@@ -31,3 +33,17 @@ def diagnostic_login_view(request):
 def user_login_view(request):
     # Implement user login logic here
     return render(request, 'diagnostics/user_login.html')
+
+def diagnostic_dashboard_view(request):
+    diagnostics = Diagnostic.objects.all()
+    return render(request, 'diagnostics/diagnostic_dashboard.html', {'diagnostics': diagnostics})
+
+def add_patient_view(request):
+    if request.method == 'POST':
+        form = DiagnosticForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('diagnostic_dashboard')
+    else:
+        form = DiagnosticForm()
+    return render(request, 'diagnostics/add_patient.html', {'form': form})
