@@ -1,17 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diagnostic Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
-    <div class="container mt-5">
-        <h1>Diagnostic Dashboard</h1>
+    <section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+        <h1 class="pt-3">Diagnostic Dashboard</h1>
         <a href="{% url 'add_patient' %}" class="btn btn-primary mb-3">Add Patient</a>
         <table class="table table-bordered">
             <thead>
@@ -21,7 +20,7 @@
                     <th>Email ID</th>
                     <th>User Phone</th>
                     <th>Age</th>
-                    <th>Scan</th>
+                    <th>Scans</th>
                     <th>Status of Prediction</th>
                 </tr>
             </thead>
@@ -34,9 +33,12 @@
                     <td>{{ diagnostic.user_phn }}</td>
                     <td>{{ diagnostic.age }}</td>
                     <td>
-                        <a href="{{ diagnostic.scan.url }}" target="_blank">
-                            <img src="{{ diagnostic.scan.url }}" alt="Scan" style="max-width: 100px;">
+                        {% for scan in diagnostic.scans.all %}
+                        <a href="{{ scan.scan.url }}" target="_blank">
+                            <img src="{{ scan.scan.url }}" alt="Scan" style="max-width: 100px;">
                         </a>
+                        {% endfor %}
+                        <a href="{% url 'add_scan' diagnostic.user_id %}" class="btn btn-secondary mt-2">Add Scan</a>
                     </td>
                     <td>{{ diagnostic.status_of_prediction }}</td>
                 </tr>
@@ -44,6 +46,7 @@
             </tbody>
         </table>
     </div>
+    </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from .models import Diagnostic
-from .forms import DiagnosticForm
+from .models import Diagnostic, Scan
+from .forms import DiagnosticForm, ScanForm
+
+def landing_page(request):
+    return render(request, 'index.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -11,7 +14,7 @@ def login_view(request):
             return redirect('diagnostic_login')
         elif login_type == 'user_profile':
             return redirect('user_login')
-    return render(request, 'diagnostics/login.html')
+    return render(request, 'login.html')
 
 def diagnostic_login_view(request):
     if request.method == 'POST':
@@ -27,23 +30,36 @@ def diagnostic_login_view(request):
             else:
                 return HttpResponse("Unauthorized user", status=403)
         else:  # Invalid credentials
-            return render(request, 'diagnostics/login_diagnostics.html', {'error': 'Invalid credentials'})
-    return render(request, 'diagnostics/login_diagnostics.html')
+            return render(request, 'login_diagnostics.html', {'error': 'Invalid credentials'})
+    return render(request, 'login_diagnostics.html')
 
 def user_login_view(request):
     # Implement user login logic here
-    return render(request, 'diagnostics/user_login.html')
+    return render(request, 'user_login.html')
 
 def diagnostic_dashboard_view(request):
     diagnostics = Diagnostic.objects.all()
-    return render(request, 'diagnostics/diagnostic_dashboard.html', {'diagnostics': diagnostics})
+    return render(request, 'diagnostic_dashboard.html', {'diagnostics': diagnostics})
 
 def add_patient_view(request):
     if request.method == 'POST':
-        form = DiagnosticForm(request.POST, request.FILES)
+        form = DiagnosticForm(request.POST)
         if form.is_valid():
-            form.save()
+            diagnostic = form.save()
             return redirect('diagnostic_dashboard')
     else:
         form = DiagnosticForm()
-    return render(request, 'diagnostics/add_patient.html', {'form': form})
+    return render(request, 'add_patient.html', {'form': form})
+
+def add_scan_view(request, user_id):
+    diagnostic = get_object_or_404(Diagnostic, user_id=user_id)
+    if request.method == 'POST':
+        form = ScanForm(request.POST, request.FILES)
+        if form.is_valid():
+            scan = form.save(commit=False)
+            scan.diagnostic = diagnostic
+            scan.save()
+            return redirect('diagnostic_dashboard')
+    else:
+        form = ScanForm()
+    return render(request, 'add_scan.html', {'form': form, 'diagnostic': diagnostic})
