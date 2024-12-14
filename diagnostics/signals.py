@@ -8,7 +8,7 @@ from .models import Diagnostic
 @receiver(post_save, sender=Diagnostic)
 def send_patient_added_email(sender, instance, created, **kwargs):
     if created:
-        subject = 'Welcome to Diagnostic Dashboard'
+        subject = 'Welcome to BCD System'
         html_message = render_to_string('diagnostics/email_template.html', {
             'user_name': instance.user_name,
             'user_phn': instance.user_phn,

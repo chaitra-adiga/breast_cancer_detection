@@ -38,9 +38,32 @@
                 {% endfor %}
             </td>
         </tr>
+        <tr>
+            <th>Had Implants Before</th>
+            <td>{{ diagnostic.had_implants_before }}</td>
+        </tr>
+        <tr>
+            <th>Status of Prediction</th>
+            <td>{{ diagnostic.status_of_prediction }}</td>
+        </tr>
+        
     </table>
     <a href="{% url 'diagnostic_update' diagnostic.pk %}" class="btn btn-warning">Update</a>
     <a href="{% url 'diagnostic_delete' diagnostic.pk %}" class="btn btn-danger">Delete</a>
     <a href="{% url 'diagnostic_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
 </div>
 {% endblock content %}
+
+<!--<tr>
+            <th>Scans</th>
+            <td>
+                {% for scan in diagnostic.scans.all %}
+                <div class="mb-3">
+                    <a href="{{ scan.scan.url }}" target="_blank">
+                        <img src="{{ scan.scan.url }}" alt="Scan" style="max-width: 100px;">
+                    </a>
+                    <p class="mb-0">Type: {{ scan.type_of_scan }}, View: {{ scan.view_of_scan }}</p>
+                </div>
+                {% endfor %}
+            </td>
+        </tr>-->
