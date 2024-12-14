@@ -1,15 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import (ListView, CreateView,
-                                   UpdateView, DeleteView,
-                                   DetailView,TemplateView)
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
 from django.http import HttpResponse
 from .models import Diagnostic, Scan
 from .forms import DiagnosticForm, ScanForm
 
 def home_view(request):
     return render(request, 'index.html')
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('login')
+    else:
+        return redirect('home')
 
 def login_view(request):
     if request.method == 'POST':
