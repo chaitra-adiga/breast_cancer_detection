@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate,login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (ListView, CreateView,
                                    UpdateView, DeleteView,
-                                   DetailView)
+                                   DetailView,TemplateView)
 from django.http import HttpResponse
 from .models import Diagnostic, Scan
 from .forms import DiagnosticForm, ScanForm
@@ -46,6 +46,13 @@ class DiagnosticListView(ListView):
     template_name = 'diagnostic_dashboard.html'
     context_object_name = 'diagnostics'
 
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Diagnostic.objects.filter(user_name__icontains=query) | Diagnostic.objects.filter(user_id__icontains=query)
+        return Diagnostic.objects.all()
+    
+    
 class DiagnosticDetailView(LoginRequiredMixin, DetailView):
     model = Diagnostic
     template_name = 'diagnostic_detail.html'
@@ -56,18 +63,6 @@ class DiagnosticCreateView(LoginRequiredMixin, CreateView):
     form_class = DiagnosticForm
     template_name = 'add_patient.html'
     success_url = '/diagnostic-dashboard/'
-
-class ScanCreateView(LoginRequiredMixin, CreateView):
-    model = Scan
-    form_class = ScanForm
-    template_name = 'add_scan.html'
-
-    def form_valid(self, form):
-        form.instance.diagnostic = get_object_or_404(Diagnostic, user_id=self.kwargs['user_id'])
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return '/diagnostic-dashboard/'
 
 class DiagnosticUpdateView(LoginRequiredMixin, UpdateView):
     model = Diagnostic
@@ -80,6 +75,23 @@ class DiagnosticDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/diagnostic-dashboard/'
     template_name = 'diagnostic_confirm_delete.html'
 
+class ScanCreateView(LoginRequiredMixin, CreateView):
+    model = Scan
+    form_class = ScanForm
+    template_name = 'add_scan.html'
+
+    def form_valid(self, form):
+        form.instance.diagnostic = get_object_or_404(Diagnostic, user_id=self.kwargs['user_id'])
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['diagnostic'] = get_object_or_404(Diagnostic, user_id=self.kwargs['user_id'])
+        return context
+
+    def get_success_url(self):
+        return '/diagnostic-dashboard/'
+
 class ScanUpdateView(LoginRequiredMixin, UpdateView):
     model = Scan
     form_class = ScanForm
@@ -90,3 +102,21 @@ class ScanDeleteView(LoginRequiredMixin, DeleteView):
     model = Scan
     template_name = 'confirm_delete_scan.html'
     success_url = '/diagnostic-dashboard/'
+
+
+class AddScanForExistingPatientView(LoginRequiredMixin, CreateView):
+    model = Scan
+    form_class = ScanForm
+    template_name = 'add_scan_existing_patient.html'
+
+    def form_valid(self, form):
+        user_id = self.request.POST.get('user_id')
+        try:
+            diagnostic = Diagnostic.objects.get(user_id=user_id)
+            form.instance.diagnostic = diagnostic
+            return super().form_valid(form)
+        except Diagnostic.DoesNotExist:
+            return redirect('patient_not_found')
+
+    def get_success_url(self):
+        return '/diagnostic-dashboard/'

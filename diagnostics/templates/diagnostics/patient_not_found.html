@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}<title>Patient Not Found</title>{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Patient Not Found</h1>
+    <p>The patient with the given ID does not exist. Please check the ID and try again.</p>
+    <a href="{% url 'add_scan_existing' %}" class="btn btn-primary">Try Again</a>
+</div>
+{% endblock content %}
