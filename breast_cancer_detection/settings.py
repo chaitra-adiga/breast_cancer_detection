@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'diagnostics',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +59,8 @@ ROOT_URLCONF = 'breast_cancer_detection.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'diagnostics', 'templates', 'diagnostics')],
+        'DIRS': [os.path.join(BASE_DIR, 'diagnostics', 'templates', 'diagnostics'),
+                 os.path.join(BASE_DIR, 'users', 'templates', 'users')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
