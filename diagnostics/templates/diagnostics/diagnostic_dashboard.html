@@ -22,12 +22,13 @@
                     <th>Age</th>
                     <th>Scans</th>
                     <th>Status of Prediction</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for diagnostic in diagnostics %}
                 <tr>
-                    <td>{{ diagnostic.user_id }}</td>
+                    <td><a href="{% url 'diagnostic_detail' diagnostic.pk %}">{{ diagnostic.user_id }}</a></td>
                     <td>{{ diagnostic.user_name }}</td>
                     <td>{{ diagnostic.email_id }}</td>
                     <td>{{ diagnostic.user_phn }}</td>
@@ -41,6 +42,10 @@
                         <a href="{% url 'add_scan' diagnostic.user_id %}" class="btn btn-secondary mt-2">Add Scan</a>
                     </td>
                     <td>{{ diagnostic.status_of_prediction }}</td>
+                    <td>
+                        <a href="{% url 'diagnostic_update' diagnostic.pk %}" class="btn btn-warning btn-sm">Update</a>
+                        <a href="{% url 'diagnostic_delete' diagnostic.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -49,5 +54,4 @@
     </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

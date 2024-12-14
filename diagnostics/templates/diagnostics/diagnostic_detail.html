@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}<title>Patient Details</title>{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Patient Details</h1>
+    <table class="table table-bordered">
+        <tr>
+            <th>User ID</th>
+            <td>{{ diagnostic.user_id }}</td>
+        </tr>
+        <tr>
+            <th>User Name</th>
+            <td>{{ diagnostic.user_name }}</td>
+        </tr>
+        <tr>
+            <th>Email ID</th>
+            <td>{{ diagnostic.email_id }}</td>
+        </tr>
+        <tr>
+            <th>User Phone</th>
+            <td>{{ diagnostic.user_phn }}</td>
+        </tr>
+        <tr>
+            <th>Age</th>
+            <td>{{ diagnostic.age }}</td>
+        </tr>
+        <tr>
+            <th>Status of Prediction</th>
+            <td>{{ diagnostic.status_of_prediction }}</td>
+        </tr>
+        <tr>
+            <th>Scans</th>
+            <td>
+                {% for scan in diagnostic.scans.all %}
+                <a href="{{ scan.scan.url }}" target="_blank">
+                    <img src="{{ scan.scan.url }}" alt="Scan" style="max-width: 100px;">
+                </a>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+    <a href="{% url 'diagnostic_update' diagnostic.pk %}" class="btn btn-warning">Update</a>
+    <a href="{% url 'diagnostic_delete' diagnostic.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'diagnostic_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock content %}

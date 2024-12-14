@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate,login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import (ListView, CreateView,
+                                   UpdateView, DeleteView,
+                                   DetailView)
 from django.http import HttpResponse
 from .models import Diagnostic, Scan
 from .forms import DiagnosticForm, ScanForm
 
-def landing_page(request):
+def home_view(request):
     return render(request, 'index.html')
 
 def login_view(request):
@@ -37,29 +41,52 @@ def user_login_view(request):
     # Implement user login logic here
     return render(request, 'user_login.html')
 
-def diagnostic_dashboard_view(request):
-    diagnostics = Diagnostic.objects.all()
-    return render(request, 'diagnostic_dashboard.html', {'diagnostics': diagnostics})
+class DiagnosticListView(ListView):
+    model = Diagnostic
+    template_name = 'diagnostic_dashboard.html'
+    context_object_name = 'diagnostics'
 
-def add_patient_view(request):
-    if request.method == 'POST':
-        form = DiagnosticForm(request.POST)
-        if form.is_valid():
-            diagnostic = form.save()
-            return redirect('diagnostic_dashboard')
-    else:
-        form = DiagnosticForm()
-    return render(request, 'add_patient.html', {'form': form})
+class DiagnosticDetailView(LoginRequiredMixin, DetailView):
+    model = Diagnostic
+    template_name = 'diagnostic_detail.html'
+    context_object_name = 'diagnostic'
 
-def add_scan_view(request, user_id):
-    diagnostic = get_object_or_404(Diagnostic, user_id=user_id)
-    if request.method == 'POST':
-        form = ScanForm(request.POST, request.FILES)
-        if form.is_valid():
-            scan = form.save(commit=False)
-            scan.diagnostic = diagnostic
-            scan.save()
-            return redirect('diagnostic_dashboard')
-    else:
-        form = ScanForm()
-    return render(request, 'add_scan.html', {'form': form, 'diagnostic': diagnostic})
+class DiagnosticCreateView(LoginRequiredMixin, CreateView):
+    model = Diagnostic
+    form_class = DiagnosticForm
+    template_name = 'add_patient.html'
+    success_url = '/diagnostic-dashboard/'
+
+class ScanCreateView(LoginRequiredMixin, CreateView):
+    model = Scan
+    form_class = ScanForm
+    template_name = 'add_scan.html'
+
+    def form_valid(self, form):
+        form.instance.diagnostic = get_object_or_404(Diagnostic, user_id=self.kwargs['user_id'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return '/diagnostic-dashboard/'
+
+class DiagnosticUpdateView(LoginRequiredMixin, UpdateView):
+    model = Diagnostic
+    form_class = DiagnosticForm
+    template_name = 'diagnostic_form.html'
+    success_url = '/diagnostic-dashboard/'
+
+class DiagnosticDeleteView(LoginRequiredMixin, DeleteView):
+    model = Diagnostic
+    success_url = '/diagnostic-dashboard/'
+    template_name = 'diagnostic_confirm_delete.html'
+
+class ScanUpdateView(LoginRequiredMixin, UpdateView):
+    model = Scan
+    form_class = ScanForm
+    template_name = 'update_scan.html'
+    success_url = '/diagnostic-dashboard/'
+
+class ScanDeleteView(LoginRequiredMixin, DeleteView):
+    model = Scan
+    template_name = 'confirm_delete_scan.html'
+    success_url = '/diagnostic-dashboard/'
