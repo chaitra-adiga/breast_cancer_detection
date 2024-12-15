@@ -1,0 +1,152 @@
+{% extends 'user_navbar.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class=" mb-4">Hello, {{ user.email }}!</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            <h3 class=" mb-4">Prediction Status</h3>
+            <div class="status-tracker">
+                <ul class="timeline">
+                    <!-- Step 1 -->
+                    <li class="timeline-item {% if status == 'uploaded' or status == 'processing' or status == 'completed' %}completed{% else %}pending{% endif %}">
+                        <div class="timeline-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Scans and Details Added</h5>
+                            <p>Uploaded successfully, awaiting processing.</p>
+                        </div>
+                    </li>
+                    <!-- Step 2 -->
+                    <li class="timeline-item {% if status == 'processing' or status == 'completed' %}completed{% elif status == 'uploaded' %}active{% else %}pending{% endif %}">
+                        <div class="timeline-icon">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Data Sent for Prediction</h5>
+                            <p>Processing your data...</p>
+                        </div>
+                    </li>
+                    <!-- Step 3 -->
+                    <li class="timeline-item {% if status == 'completed' %}completed{% elif status == 'processing' %}active{% else %}pending{% endif %}">
+                        <div class="timeline-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Result Prepared</h5>
+                            <p>Download your result as a PDF.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Timeline Styling */
+.status-tracker {
+    position: relative;
+    margin: 0 auto;
+    max-width: 700px;
+}
+.timeline {
+    padding: 0;
+    list-style: none;
+    position: relative;
+}
+
+/* Individual Timeline Items */
+.timeline-item {
+    position: relative;
+    margin-bottom: 50px;
+    padding-left: 60px;
+}
+
+/* Vertical line for each timeline item */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 5px;  /* Adjusted top to align with icon center */
+    bottom: -45px; /* Adjusted bottom to extend to next */
+    width: 4px;
+    background: #e0e0e0;
+    z-index: 0;
+}
+.timeline-item.completed::before {
+    background-color: #28a745;
+}
+
+.timeline-item .timeline-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: 3px solid #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+.timeline-item.completed .timeline-icon {
+    border-color: #28a745;
+    background-color: #eaffea;
+    color: #28a745;
+}
+.timeline-item.active .timeline-icon {
+    border-color: #007bff;
+    background-color: #e6f2ff;
+    color: #007bff;
+}
+.timeline-item.pending .timeline-icon {
+    border-color: #ccc;
+    background-color: #f9f9f9;
+    color: #888;
+}
+
+/* Timeline Content */
+.timeline-item .timeline-content {
+    margin-left: 60px;
+}
+.timeline-item h5 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.timeline-item p {
+    margin: 5px 0 0;
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+/* Move heading to the left */
+.card-body h3 {
+        text-align: left;
+    }
+
+/* Animation for Spinner */
+.timeline-icon .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hover Effects */
+.timeline-item:hover .timeline-icon {
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+}
+.timeline-item:hover .timeline-content h5 {
+    color: #007bff;
+    transition: all 0.3s ease-in-out;
+}
+</style>
+{% endblock %}

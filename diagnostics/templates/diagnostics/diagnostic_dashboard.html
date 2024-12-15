@@ -86,6 +86,7 @@
                             <th class="text-center">Email ID</th>
                             <th class="text-center">User Phone</th>
                             <th class="text-center">Age</th>
+                            <th class="text-center">Had Implants</th>
                             <th class="text-center">Scans</th>
                             <th class="text-center">Status of Prediction</th>
                             <th class="text-center">Actions</th>
@@ -99,6 +100,7 @@
                             <td class="text-center">{{ diagnostic.email_id }}</td>
                             <td class="text-center">{{ diagnostic.user_phn }}</td>
                             <td class="text-center">{{ diagnostic.age }}</td>
+                            <td class="text-center">{{ diagnostic.had_implants_before }}</td>
                             <td class="text-center">
                                 <div class="d-flex flex-wrap justify-content-center gap-2">
                                     {% for scan in diagnostic.scans.all %}

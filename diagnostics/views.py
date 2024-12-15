@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from .models import Diagnostic, Scan
 from .forms import DiagnosticForm, ScanForm
 
-def home_view(request):
+def landing_page(request):
     return render(request, 'index.html')
 
 def logout_view(request):
@@ -15,7 +15,7 @@ def logout_view(request):
         logout(request)
         return redirect('login')
     else:
-        return redirect('home')
+        return redirect('landing_page')
 
 def login_view(request):
     if request.method == 'POST':
@@ -23,7 +23,7 @@ def login_view(request):
         if login_type == 'diagnostic_admin':
             return redirect('diagnostic_login')
         elif login_type == 'user_profile':
-            return redirect('user_login')
+            return redirect('user-login')
     return render(request, 'login.html')
 
 def diagnostic_login_view(request):

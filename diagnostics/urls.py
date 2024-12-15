@@ -3,10 +3,9 @@ from . import views
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', views.home_view, name='home'),
+    path('', views.landing_page, name='landing_page'),
     path('login/', views.login_view, name='login'),
     path('diagnostic-login/', views.diagnostic_login_view, name='diagnostic_login'),
-    path('user-login/', views.user_login_view, name='user_login'),
     path('logout/', views.logout_view, name='logout'),
     path('diagnostic-dashboard/', views.DiagnosticListView.as_view(), name='diagnostic_dashboard'),
     path('add-patient/', views.DiagnosticCreateView.as_view(), name='add_patient'),
