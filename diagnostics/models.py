@@ -1,47 +1,45 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Diagnostic(models.Model):
     YES_NO_CHOICES = [
-        ('Yes', 'Yes'),
-        ('No', 'No'),
+        (1, 'Yes'),
+        (0, 'No'),
     ]
-    user_id = models.CharField(max_length=15, unique=True)  # Use phone number
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)  # Add this line
+    user_identity = models.CharField(max_length=15, unique=True)  # Use phone number
     user_name = models.CharField(max_length=100)
     email_id = models.EmailField(max_length=100)
     user_phn = models.CharField(max_length=15)
     age = models.IntegerField()
-    #had_implants_before = models.BooleanField(default=False)
-    had_implants_before = models.CharField(
-        max_length=3,
+    had_implants_before = models.IntegerField(
         choices=YES_NO_CHOICES,
-        default='No'
+        default=0  #Default to No
     )
     uploaded_at = models.DateTimeField(auto_now_add=True)
     status_of_prediction = models.CharField(max_length=100, default='Pending')
 
     def __str__(self):
-        return f"{self.user_name}-{self.user_id}"  # bcd_2024
+        return f"{self.user_name}-{self.user_identity}"  # bcd_2024
 
 class Scan(models.Model):
     SCAN_TYPE_CHOICES = [
-        ('MLO', 'MLO'),
-        ('CC', 'CC'),
+        (1, 'MLO'),
+        (0, 'CC'),
     ]
     VIEW_CHOICES = [
-        ('Left', 'Left'),
-        ('Right', 'Right'),
+        (1, 'Left'),
+        (0, 'Right'),
     ]
     diagnostic = models.ForeignKey(Diagnostic, related_name='scans', on_delete=models.CASCADE)
     scan = models.ImageField(upload_to='scans/')
-    type_of_scan = models.CharField(
-        max_length=3,
+    type_of_scan = models.IntegerField(
         choices=SCAN_TYPE_CHOICES,
-        default='MLO'
+        default=1 #default to MLO
     )
-    view_of_scan = models.CharField(
-        max_length=5,
+    view_of_scan = models.IntegerField(
         choices=VIEW_CHOICES,
-        default='Left'
+        default=1 #Default to Left
     )
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

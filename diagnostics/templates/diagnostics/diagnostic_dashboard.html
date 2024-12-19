@@ -95,7 +95,7 @@
                     <tbody>
                         {% for diagnostic in diagnostics %}
                         <tr>
-                            <td class="text-center"><a href="{% url 'diagnostic_detail' diagnostic.pk %}" class="text-primary">{{ diagnostic.user_id }}</a></td>
+                            <td class="text-center"><a href="{% url 'diagnostic_detail' diagnostic.pk %}" class="text-primary">{{ diagnostic.user_identity }}</a></td>
                             <td class="text-center">{{ diagnostic.user_name }}</td>
                             <td class="text-center">{{ diagnostic.email_id }}</td>
                             <td class="text-center">{{ diagnostic.user_phn }}</td>
@@ -109,7 +109,7 @@
                                     </a>
                                     {% endfor %}
                                 </div>
-                                <a href="{% url 'add_scan' diagnostic.user_id %}" class="btn btn-add-scan btn-sm mt-2">Add/Edit Scan</a>
+                                <a href="{% url 'add_scan' diagnostic.user_identity %}" class="btn btn-add-scan btn-sm mt-2">Add/Edit Scan</a>
                             </td>
                             <td class="text-center">{{ diagnostic.status_of_prediction }}</td>
                             <td class="text-center">

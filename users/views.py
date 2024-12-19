@@ -1,34 +1,58 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserLoginForm
-from diagnostics.models import Diagnostic  # Add this import statement
+from diagnostics.models import Diagnostic, Scan   # Add this import statement
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 import joblib
 
-
+@login_required
 def user_home(request):
-
     age_scaler = joblib.load("./diagnostics/static/artifacts/custom_scaler.pkl")
+    user = request.user  # Get the currently logged-in user
+    try:
+        diagnostic = Diagnostic.objects.get(user=user)
+    except Diagnostic.DoesNotExist:
+        return render(request, 'users/user_not_found.html')  # Or handle this as needed
 
-    # Yaha se Modify karna hai
-    status = "processing"
-    img = Image.open("./media/scans/scan_74.jpg")
+    scans = Scan.objects.filter(diagnostic=diagnostic)
+    if not scans.exists():
+         return render(request, 'users/no_scan_found.html')  # Or handle no scans case
 
-    age = 50
-    view_CC = 1
-    view_MLO = 0
-    laterality_L = 1
-    laterality_R = 0
+    # Load the first scan
+    first_scan = scans.first() # Take only one scan for inference
+
+    # Get Image Path
+    img_path = first_scan.scan.path # get local image path
+
+    # Open Image using local path
+    img = Image.open(img_path)
+
+    # Get user's data from diagnostic model
+    age = diagnostic.age
+    # Get scan data from scan model
+    view_CC = 1 if first_scan.type_of_scan == 0 else 0 # 1 if CC, 0 if not
+    view_MLO = 1 if first_scan.type_of_scan == 1 else 0 # 1 if MLO, 0 if not
+    laterality_L = 1 if first_scan.view_of_scan == 1 else 0 # 1 if Left, 0 if not
+    laterality_R = 1 if first_scan.view_of_scan == 0 else 0 # 1 if Right, 0 if not
 
     results = run_tflite_inference(
         img, age, view_CC, view_MLO, laterality_L, laterality_R, age_scaler
     )
 
-    return render(request, "users/home.html", {"status": status})
 
+    status = "Completed" #diagnostic.status_of_prediction
+    
+    context = {
+        "status": status,
+        "results": results,  # Pass the results to the template
+         "scans": scans
+    }
+
+    return render(request, "users/home.html", context)
 
 def register(request):
     if request.method == "POST":

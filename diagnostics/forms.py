@@ -9,7 +9,7 @@ class DiagnosticForm(forms.ModelForm):
     
     class Meta:
         model = Diagnostic
-        fields = ['user_id', 'user_name', 'email_id', 'user_phn', 'age', 'had_implants_before', 'status_of_prediction']
+        fields = ['user_identity', 'user_name', 'email_id', 'user_phn', 'age', 'had_implants_before', 'status_of_prediction']
 
 class ScanForm(forms.ModelForm):
     type_of_scan = forms.ChoiceField(

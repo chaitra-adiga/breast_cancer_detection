@@ -84,7 +84,7 @@ WSGI_APPLICATION = "breast_cancer_detection.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "breast_cancer_detection",  # The name of the database you created
+        "NAME": "BCD_system",  # The name of the database you created
         "USER": "postgres",  # The username for your PostgreSQL database
         "PASSWORD": "1234",  # The password you set during PostgreSQL installation
         "HOST": "localhost",  # Or your database server's IP address

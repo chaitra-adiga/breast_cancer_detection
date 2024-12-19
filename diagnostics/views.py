@@ -55,7 +55,7 @@ class DiagnosticListView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            return Diagnostic.objects.filter(user_name__icontains=query) | Diagnostic.objects.filter(user_id__icontains=query)
+            return Diagnostic.objects.filter(user_name__icontains=query) | Diagnostic.objects.filter(user_identity__icontains=query)
         return Diagnostic.objects.all()
     
     
@@ -87,12 +87,12 @@ class ScanCreateView(LoginRequiredMixin, CreateView):
     template_name = 'add_scan.html'
 
     def form_valid(self, form):
-        form.instance.diagnostic = get_object_or_404(Diagnostic, user_id=self.kwargs['user_id'])
+        form.instance.diagnostic = get_object_or_404(Diagnostic, user_identity=self.kwargs['user_identity'])
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['diagnostic'] = get_object_or_404(Diagnostic, user_id=self.kwargs['user_id'])
+        context['diagnostic'] = get_object_or_404(Diagnostic, user_identity=self.kwargs['user_identity'])
         return context
 
     def get_success_url(self):
@@ -116,9 +116,9 @@ class AddScanForExistingPatientView(LoginRequiredMixin, CreateView):
     template_name = 'add_scan_existing_patient.html'
 
     def form_valid(self, form):
-        user_id = self.request.POST.get('user_id')
+        user_identity = self.request.POST.get('user_identity')
         try:
-            diagnostic = Diagnostic.objects.get(user_id=user_id)
+            diagnostic = Diagnostic.objects.get(user_identity=user_identity)
             form.instance.diagnostic = diagnostic
             return super().form_valid(form)
         except Diagnostic.DoesNotExist:

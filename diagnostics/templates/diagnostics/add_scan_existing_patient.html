@@ -15,11 +15,11 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-                <label for="user_id">Patient ID</label>
-                <input type="text" id="user_id" name="user_id" class="form-control" required>
-                {% if form.user_id.errors %}
+                <label for="user_identity">Patient ID</label>
+                <input type="text" id="user_identity" name="user_identity" class="form-control" required>
+                {% if form.user_identity.errors %}
                 <div class="text-danger">
-                    {{ form.user_id.errors }}
+                    {{ form.user_identity.errors }}
                 </div>
                 {% endif %}
             </div>
