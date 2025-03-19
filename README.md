@@ -102,5 +102,5 @@ This project is licensed under the **MIT License**.
 Contributions are welcome! Feel free to fork this repository, create a feature branch, and submit a pull request.
 
 ## 📞 Contact
-For any queries, reach out via email at **itsca03@gmail.com** or connect on [LinkedIn]((https://www.linkedin.com/in/chaitra-adiga-1430ba295/)).
+For any queries, reach out via email at **itsca03@gmail.com** or connect on [LinkedIn](https://www.linkedin.com/in/chaitra-adiga-1430ba295/).
 
