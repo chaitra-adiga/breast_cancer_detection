@@ -1,6 +1,5 @@
 # Breast Cancer Detection System
 
-![Breast Cancer Detection](https://via.placeholder.com/800x300.png?text=Breast+Cancer+Detection+System)
 
 ## 📌 Overview
 The **Breast Cancer Detection System** is an AI-powered web application designed to assist diagnostic centers in analyzing and detecting breast cancer from medical scans. The system streamlines the workflow by allowing diagnostic centers to upload patient scans, which are processed using a deep learning model to predict whether a scan is **benign** or **malignant**.
@@ -103,5 +102,5 @@ This project is licensed under the **MIT License**.
 Contributions are welcome! Feel free to fork this repository, create a feature branch, and submit a pull request.
 
 ## 📞 Contact
-For any queries, reach out via email at **your.email@example.com** or connect on [LinkedIn](https://www.linkedin.com/in/yourprofile).
+For any queries, reach out via email at **itsca03@gmail.com** or connect on [LinkedIn]((https://www.linkedin.com/in/chaitra-adiga-1430ba295/)).
 
